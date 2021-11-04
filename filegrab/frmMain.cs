@@ -66,13 +66,13 @@ namespace FileGrab
                 {
                     fsWatcher.AddHandler(OnChanged, OnChanged, OnChanged, OnChanged, OnError);
                 }
-                else if (radioButton2.Checked)
+                else if (radioButton3.Checked)
                 {
-                    fsWatcher.AddHandler(null, OnCreation, null, null, OnError);
+                    fsWatcher.AddHandler(null, OnCreation, OnDeleted, OnRenamed, OnError);
                 }
                 else
                 {
-                    fsWatcher.AddHandler(null, OnCreation, OnDeleted, OnRenamed, OnError);
+                    fsWatcher.AddHandler(null, OnCreation, null, null, OnError);
                 }
                 
                 IsRunning = false;
@@ -131,16 +131,16 @@ namespace FileGrab
         }
 
         private void chkRule_CheckedChanged(object sender, EventArgs e)
-        {
-            txtRule.Enabled = chkRuleRegex.Enabled = chkRule.Checked;
-            if (!chkRule.Checked)
-            {
-                btnStart.Enabled = true;
-                txtRule.BackColor = System.Drawing.Color.White;
-            }
-        }
+		{
+			txtRule.Enabled = chkRuleRegex.Enabled = chkRule.Checked;
+			if (!chkRule.Checked)
+			{
+				btnStart.Enabled = true;
+				txtRule.BackColor = System.Drawing.Color.White;
+			}
+		}
 
-        private void txtRule_TextChanged(object sender, EventArgs e)
+	    private void txtRule_TextChanged(object sender, EventArgs e)
         {
             bool invalid = false;
 
@@ -148,27 +148,13 @@ namespace FileGrab
             {
                 try
                 {
-                    Regex regex = new Regex(txtRule.Text);
+                    Regex regex = new(txtRule.Text);
                 }
                 catch
                 {
                     invalid = true;
                 }
             }
-            else
-            {
-                foreach (char p in Path.GetInvalidFileNameChars())
-                {
-                    if (p == '*' || p == '?' || p == '\\')
-                        continue;
-
-                    if (txtRule.Text.IndexOf(p) != -1)
-                        invalid = true;
-                }
-            }
-
-            if (txtRule.Text == "")
-                invalid = true;
 
             txtRule.BackColor = invalid ? System.Drawing.Color.LightPink : System.Drawing.Color.White;
             btnStart.Enabled = !invalid;
@@ -185,6 +171,27 @@ namespace FileGrab
         private void linkWiki_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://sourceforge.net/p/FileGrab/wiki/Home/");
+        }
+
+        private bool check_Regex(string filename)
+        {
+            if (chkRuleRegex.Checked)
+            {
+                try
+                {
+                    Regex regex = new(txtRule.Text);
+                    return regex.IsMatch(filename);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Invalid regex :: { ex.Message } => { ex }");
+                    return false;
+                }
+            }
+            else
+            {
+                return true; // if there's no expression just catch everything :)
+            }
         }
 
         // Handlers
@@ -212,17 +219,20 @@ namespace FileGrab
                 try
                 {
                     string filename = e.Name[(1 + e.Name.LastIndexOf('\\'))..];
-                    string dstFile = Path.Combine(txtCopyTo.Text, filename);
-
-                    Utils.CopyFileTo(e.FullPath, dstFile, expr: txtRule.Text);
-
-                    File.SetAttributes(dstFile, FileAttributes.Normal); // remove read-only, hidden, etc
-
-                    if (chkWritePreserveTimes.Checked)
+                    if (check_Regex(filename))
                     {
-                        File.SetCreationTime(dstFile, File.GetCreationTime(e.FullPath));
-                        File.SetLastAccessTime(dstFile, File.GetLastAccessTime(e.FullPath));
-                        File.SetLastWriteTime(dstFile, File.GetLastWriteTime(e.FullPath));
+                        string dstFile = Path.Combine(txtCopyTo.Text, filename);
+
+                        Utils.CopyFileTo(e.FullPath, dstFile, expr: txtRule.Text);
+
+                        File.SetAttributes(dstFile, FileAttributes.Normal); // remove read-only, hidden, etc
+
+                        if (chkWritePreserveTimes.Checked)
+                        {
+                            File.SetCreationTime(dstFile, File.GetCreationTime(e.FullPath));
+                            File.SetLastAccessTime(dstFile, File.GetLastAccessTime(e.FullPath));
+                            File.SetLastWriteTime(dstFile, File.GetLastWriteTime(e.FullPath));
+                        }
                     }
                 }
                 catch (IOException ex)
@@ -267,5 +277,10 @@ namespace FileGrab
         {
             MessageBox.Show($"Error :: { e.GetException() }");
         }
+
+		private void radioButton3_CheckedChanged(object sender, EventArgs e)
+		{
+
+		}
 	}
 }

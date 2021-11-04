@@ -75,6 +75,8 @@
 			this.linkWiki = new System.Windows.Forms.LinkLabel();
 			this.lblAbout = new System.Windows.Forms.Label();
 			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.label3 = new System.Windows.Forms.Label();
+			this.radioButton2 = new System.Windows.Forms.RadioButton();
 			this.radioButton1 = new System.Windows.Forms.RadioButton();
 			this.textBox2 = new System.Windows.Forms.TextBox();
 			this.button2 = new System.Windows.Forms.Button();
@@ -85,8 +87,7 @@
 			this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.ttInfo = new System.Windows.Forms.ToolTip(this.components);
 			this.ttWarn = new System.Windows.Forms.ToolTip(this.components);
-			this.radioButton2 = new System.Windows.Forms.RadioButton();
-			this.label3 = new System.Windows.Forms.Label();
+			this.radioButton3 = new System.Windows.Forms.RadioButton();
 			((System.ComponentModel.ISupportInitialize)(this.txtFtpPort)).BeginInit();
 			this.groupFtp.SuspendLayout();
 			this.tabControl.SuspendLayout();
@@ -653,6 +654,7 @@
 			// 
 			// tabPage3
 			// 
+			this.tabPage3.Controls.Add(this.radioButton3);
 			this.tabPage3.Controls.Add(this.label3);
 			this.tabPage3.Controls.Add(this.radioButton2);
 			this.tabPage3.Controls.Add(this.radioButton1);
@@ -666,6 +668,26 @@
 			this.tabPage3.TabIndex = 4;
 			this.tabPage3.Text = "Logs";
 			this.tabPage3.UseVisualStyleBackColor = true;
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(8, 18);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(84, 17);
+			this.label3.TabIndex = 12;
+			this.label3.Text = "Log options";
+			// 
+			// radioButton2
+			// 
+			this.radioButton2.AutoSize = true;
+			this.radioButton2.Location = new System.Drawing.Point(8, 66);
+			this.radioButton2.Name = "radioButton2";
+			this.radioButton2.Size = new System.Drawing.Size(150, 21);
+			this.radioButton2.TabIndex = 11;
+			this.radioButton2.TabStop = true;
+			this.radioButton2.Text = "Log Creation (only)";
+			this.radioButton2.UseVisualStyleBackColor = true;
 			// 
 			// radioButton1
 			// 
@@ -749,25 +771,17 @@
 			this.ttWarn.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
 			this.ttWarn.ToolTipTitle = "Attention";
 			// 
-			// radioButton2
+			// radioButton3
 			// 
-			this.radioButton2.AutoSize = true;
-			this.radioButton2.Location = new System.Drawing.Point(8, 66);
-			this.radioButton2.Name = "radioButton2";
-			this.radioButton2.Size = new System.Drawing.Size(150, 21);
-			this.radioButton2.TabIndex = 11;
-			this.radioButton2.TabStop = true;
-			this.radioButton2.Text = "Log Creation (only)";
-			this.radioButton2.UseVisualStyleBackColor = true;
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(8, 18);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(84, 17);
-			this.label3.TabIndex = 12;
-			this.label3.Text = "Log options";
+			this.radioButton3.AutoSize = true;
+			this.radioButton3.Location = new System.Drawing.Point(172, 39);
+			this.radioButton3.Name = "radioButton3";
+			this.radioButton3.Size = new System.Drawing.Size(247, 21);
+			this.radioButton3.TabIndex = 13;
+			this.radioButton3.TabStop = true;
+			this.radioButton3.Text = "Log Creation, Deletion, Renaming";
+			this.radioButton3.UseVisualStyleBackColor = true;
+			this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButton3_CheckedChanged);
 			// 
 			// frmMain
 			// 
@@ -870,6 +884,7 @@
 		private System.Windows.Forms.RadioButton radioButton1;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.RadioButton radioButton2;
+		private System.Windows.Forms.RadioButton radioButton3;
 	}
 }
 
