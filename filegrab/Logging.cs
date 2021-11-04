@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FileGrab
 {
@@ -29,11 +30,21 @@ namespace FileGrab
             }
         }
 
-        public static void Log(string message)
+        public static void Log(string format, string filename, Regex regex = null)
         {
             try
             {
-                Logger.Info(message);
+                if (regex != null)
+                {
+                    if (regex.IsMatch(filename))
+                    {
+                        Logger.Info(string.Format(format, filename));
+                    }
+                }
+                else
+                {
+                    Logger.Info(string.Format(format, filename));
+                }
             }
             catch (Exception ex)
             {

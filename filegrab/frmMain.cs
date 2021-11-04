@@ -10,6 +10,7 @@ namespace FileGrab
     {
         private readonly FsWatcher fsWatcher = new();
         private FtpUpload ftpUpload;
+        private Regex fileRegex = null;
 
         public readonly string ProgramName = "FileGrab";
         public bool IsRunning {get; private set;} = true;
@@ -179,8 +180,8 @@ namespace FileGrab
             {
                 try
                 {
-                    Regex regex = new(txtRule.Text);
-                    return regex.IsMatch(filename);
+                    fileRegex = new(txtRule.Text);
+                    return fileRegex.IsMatch(filename);
                 }
                 catch (Exception ex)
                 {
@@ -199,7 +200,7 @@ namespace FileGrab
 		{
             if (e.ChangeType == WatcherChangeTypes.Changed)
             {
-                Logging.Log($"Changed: { e.FullPath }");
+                Logging.Log("Changed: { 0 }", e.FullPath, fileRegex);
                 statusFileFound.Text = $"Changed: { e.FullPath }";
             }
 		}
@@ -211,7 +212,7 @@ namespace FileGrab
                 e.FullPath.StartsWith(txtCopyTo.Text, StringComparison.CurrentCultureIgnoreCase))
                 return;
 
-            Logging.Log($"Created: { e.FullPath }");
+            Logging.Log("Created: { 0 }", e.FullPath, fileRegex);
             statusFileFound.Text = $"{ e.FullPath }";
 
             if (txtCopyTo.Text != "")
@@ -263,13 +264,13 @@ namespace FileGrab
 
         public void OnDeleted(object source, FileSystemEventArgs e)
         {
-            Logging.Log($"Deleted: { e.FullPath }");
+            Logging.Log("Deleted: { 0 }", e.FullPath, fileRegex);
             statusFileFound.Text = $"Deleted: { e.FullPath } { DateTime.Now }";
         }
 
         public void OnRenamed(object source, RenamedEventArgs e)
         {
-            Logging.Log($"Renamed: { e.OldFullPath } -> { e.FullPath }");
+            Logging.Log("Renamed: { 0 }", e.OldFullPath, fileRegex);
             statusFileFound.Text = $"Renamed: { e.OldFullPath } -> { e.FullPath }";
         }
 
